@@ -51,9 +51,9 @@ neg.addEventListener("click", () => changeSign());
 const decimal = document.querySelector("#decimal");
 decimal.addEventListener("click", () => {
   if (!operator && !firstNum.includes(".")) {
-    updateDisplay(decimal);
+    updateDisplay(decimal.textContent);
   } else if (operator && !secondNum.includes(".")) {
-    updateDisplay(decimal);
+    updateDisplay(decimal.textContent);
   }
 });
 
@@ -138,7 +138,6 @@ function changeSign() {
 
 // DOM interaction
 function updateDisplay(userInput) {
-  console.log(userInput);
   if (validInputs.includes(userInput)) {
     if (!operator) {
       firstNum += userInput;
