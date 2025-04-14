@@ -1,13 +1,14 @@
 // TODO:
-// Add keyboard support
-// Fix multiple operators bug
 // Handle premature equals
-// Support operations after equals
 
 // Global state variables
 let firstNum = "";
 let operator;
 let secondNum = "";
+
+// Helper variables
+const validInputs = "1234567890.";
+const validOperators = "+-*/";
 
 // Selectors and event listeners
 // Display
@@ -15,34 +16,34 @@ const display = document.querySelector(".display");
 
 // Inputs
 const zero = document.querySelector("#num-0");
-zero.addEventListener("click", () => updateDisplay(zero));
+zero.addEventListener("click", () => updateDisplay(zero.textContent));
 
 const one = document.querySelector("#num-1");
-one.addEventListener("click", () => updateDisplay(one));
+one.addEventListener("click", () => updateDisplay(one.textContent));
 
 const two = document.querySelector("#num-2");
-two.addEventListener("click", () => updateDisplay(two));
+two.addEventListener("click", () => updateDisplay(two.textContent));
 
 const three = document.querySelector("#num-3");
-three.addEventListener("click", () => updateDisplay(three));
+three.addEventListener("click", () => updateDisplay(three.textContent));
 
 const four = document.querySelector("#num-4");
-four.addEventListener("click", () => updateDisplay(four));
+four.addEventListener("click", () => updateDisplay(four.textContent));
 
 const five = document.querySelector("#num-5");
-five.addEventListener("click", () => updateDisplay(five));
+five.addEventListener("click", () => updateDisplay(five.textContent));
 
 const six = document.querySelector("#num-6");
-six.addEventListener("click", () => updateDisplay(six));
+six.addEventListener("click", () => updateDisplay(six.textContent));
 
 const seven = document.querySelector("#num-7");
-seven.addEventListener("click", () => updateDisplay(seven));
+seven.addEventListener("click", () => updateDisplay(seven.textContent));
 
 const eight = document.querySelector("#num-8");
-eight.addEventListener("click", () => updateDisplay(eight));
+eight.addEventListener("click", () => updateDisplay(eight.textContent));
 
 const nine = document.querySelector("#num-9");
-nine.addEventListener("click", () => updateDisplay(nine));
+nine.addEventListener("click", () => updateDisplay(nine.textContent));
 
 const neg = document.querySelector("#neg");
 neg.addEventListener("click", () => changeSign());
@@ -56,22 +57,28 @@ decimal.addEventListener("click", () => {
   }
 });
 
+// Adding keyboard support
+const body = document.querySelector("body");
+body.addEventListener("keydown", (e) => {
+  updateDisplay(e.key);
+});
+
 // Operators
 const plus = document.querySelector("#add");
-plus.addEventListener("click", () => updateDisplay(plus));
+plus.addEventListener("click", () => updateDisplay(plus.textContent));
 
 const minus = document.querySelector("#sub");
-minus.addEventListener("click", () => updateDisplay(minus));
+minus.addEventListener("click", () => updateDisplay(minus.textContent));
 
 const mult = document.querySelector("#mult");
-mult.addEventListener("click", () => updateDisplay(mult));
+mult.addEventListener("click", () => updateDisplay(mult.textContent));
 
 const div = document.querySelector("#div");
-div.addEventListener("click", () => updateDisplay(div));
+div.addEventListener("click", () => updateDisplay(div.textContent));
 
 // Evaluator
 const equals = document.querySelector("#equals");
-equals.addEventListener("click", () => updateDisplay(equals));
+equals.addEventListener("click", () => updateDisplay(equals.textContent));
 
 // Deletors
 const ac = document.querySelector("#clear");
@@ -130,30 +137,41 @@ function changeSign() {
 }
 
 // DOM interaction
-function updateDisplay(button) {
-  console.log(button);
-  if (button.classList.contains("input")) {
+function updateDisplay(userInput) {
+  console.log(userInput);
+  if (validInputs.includes(userInput)) {
     if (!operator) {
-      firstNum += button.textContent;
+      firstNum += userInput;
       display.textContent = firstNum;
     } else if (operator) {
-      secondNum += button.textContent;
+      secondNum += userInput;
       display.textContent = secondNum;
     }
-  } else if (button.classList.contains("operator")) {
+  } else if (validOperators.includes(userInput)) {
     if (!operator) {
-      operator = button.textContent;
-    } else if (operator) {
+      operator = userInput;
+    } else if (operator && firstNum && secondNum) {
       firstNum = evaluate(operator, firstNum, secondNum);
       display.textContent = firstNum;
       secondNum = "";
+    } else if (operator && !firstNum && !secondNum) {
+      firstNum = "0";
+      operator = userInput;
+    } else if (operator && firstNum && !secondNum) {
+      operator = userInput;
     }
-  } else if (button.classList.contains("evaluate")) {
-    result = evaluate(operator, firstNum, secondNum);
-    display.textContent = result;
-    firstNum = "";
-    secondNum = "";
-    operator = "";
+  } else if (userInput == "=" || userInput == "Enter") {
+    if (operator && firstNum && secondNum) {
+      firstNum = String(evaluate(operator, firstNum, secondNum));
+      display.textContent = firstNum;
+      secondNum = "";
+      operator = "";
+    } else if (operator && firstNum && !secondNum) {
+      firstNum = String(evaluate(operator, firstNum, firstNum));
+      display.textContent = firstNum;
+      secondNum = "";
+      operator = "";
+    }
   }
 }
 
