@@ -110,13 +110,13 @@ function divide(a, b) {
 
 function evaluate(op, a, b) {
   if (op === "+") {
-    return add(a, b);
+    return roundToTenDecimals(add(a, b));
   } else if (op === "-") {
-    return subtract(a, b);
+    return roundToTenDecimals(subtract(a, b));
   } else if (op === "*") {
-    return multiply(a, b);
+    return roundToTenDecimals(multiply(a, b));
   } else if (op === "/") {
-    return divide(a, b);
+    return roundToTenDecimals(divide(a, b));
   }
 }
 
@@ -197,4 +197,9 @@ function backspace() {
       display.textContent = secondNum;
     }
   }
+}
+
+// Helpers
+function roundToTenDecimals(num) {
+  return Math.round(num * 10000000000) / 10000000000;
 }
